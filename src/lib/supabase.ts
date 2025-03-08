@@ -1,6 +1,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 
+<<<<<<< HEAD
 if (!import.meta.env.VITE_SUPABASE_URL) {
   throw new Error('VITE_SUPABASE_URL is not defined');
 }
@@ -9,6 +10,8 @@ if (!import.meta.env.VITE_SUPABASE_ANON_KEY) {
   throw new Error('VITE_SUPABASE_ANON_KEY is not defined');
 }
 
+=======
+>>>>>>> bbb7007e7cdf8edcf9f12f6bdab5c7cd757ce122
 // Get environment variables with fallbacks for development
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
@@ -62,4 +65,8 @@ export const getCurrentUser = async () => {
 
   const { data: { user } } = await supabase.auth.getUser();
   return user;
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> bbb7007e7cdf8edcf9f12f6bdab5c7cd757ce122
