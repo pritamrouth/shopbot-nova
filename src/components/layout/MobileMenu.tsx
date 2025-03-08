@@ -1,10 +1,12 @@
 
-import { Menu, X, ChevronRight, Search, User, ShoppingCart } from "lucide-react";
+import { Menu, X, ChevronRight, Search, User, ShoppingCart, LogIn, LogOut } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { isAuthenticated, logout } = useAuth();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -13,6 +15,11 @@ const MobileMenu = () => {
     } else {
       document.body.style.overflow = "auto";
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    toggleMenu();
   };
 
   return (
@@ -88,14 +95,34 @@ const MobileMenu = () => {
             </nav>
 
             <div className="mt-8 space-y-4">
-              <Link
-                to="/account"
-                onClick={toggleMenu}
-                className="flex items-center gap-3 py-3"
-              >
-                <User size={20} />
-                <span className="font-medium">Account</span>
-              </Link>
+              {isAuthenticated ? (
+                <>
+                  <Link
+                    to="/account"
+                    onClick={toggleMenu}
+                    className="flex items-center gap-3 py-3"
+                  >
+                    <User size={20} />
+                    <span className="font-medium">Account</span>
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-3 py-3 w-full text-left"
+                  >
+                    <LogOut size={20} />
+                    <span className="font-medium">Log Out</span>
+                  </button>
+                </>
+              ) : (
+                <Link
+                  to="/signin"
+                  onClick={toggleMenu}
+                  className="flex items-center gap-3 py-3"
+                >
+                  <LogIn size={20} />
+                  <span className="font-medium">Sign In</span>
+                </Link>
+              )}
             </div>
           </div>
         </div>

@@ -1,8 +1,10 @@
 
 import { Link } from "react-router-dom";
-import { Search, ShoppingCart, User } from "lucide-react";
+import { Search, ShoppingCart, User, LogIn } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/context/CartContext";
 import MobileMenu from "./MobileMenu";
 
 const Navbar = () => {
@@ -10,6 +12,8 @@ const Navbar = () => {
   const [isSearchActive, setIsSearchActive] = useState(false);
   const location = useLocation();
   const isHome = location.pathname === "/";
+  const { isAuthenticated } = useAuth();
+  const { getCartCount } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -81,14 +85,20 @@ const Navbar = () => {
             )}
           </div>
           
-          <Link to="/account" className="hover:text-gray-500">
-            <User size={20} />
-          </Link>
+          {isAuthenticated ? (
+            <Link to="/account" className="hover:text-gray-500">
+              <User size={20} />
+            </Link>
+          ) : (
+            <Link to="/signin" className="hover:text-gray-500">
+              <LogIn size={20} />
+            </Link>
+          )}
           
           <Link to="/cart" className="hover:text-gray-500 relative">
             <ShoppingCart size={20} />
             <span className="absolute -top-2 -right-2 bg-shop-black text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-              3
+              {getCartCount()}
             </span>
           </Link>
         </div>
@@ -97,7 +107,7 @@ const Navbar = () => {
           <Link to="/cart" className="mr-4 relative">
             <ShoppingCart size={20} />
             <span className="absolute -top-2 -right-2 bg-shop-black text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-              3
+              {getCartCount()}
             </span>
           </Link>
           
