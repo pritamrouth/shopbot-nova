@@ -1,11 +1,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
-
-interface User {
-  id: string;
-  email: string;
-  name?: string;
-}
+import { User } from "@supabase/supabase-js";
+import { signIn, signUp, signOut, getCurrentUser, supabase } from "@/lib/supabase";
 
 interface AuthContextType {
   user: User | null;
@@ -13,7 +9,7 @@ interface AuthContextType {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, name?: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -22,72 +18,61 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check for stored user on initial load
+  // Initialize auth state
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
+    const initializeAuth = async () => {
       try {
-        setUser(JSON.parse(storedUser));
+        const currentUser = await getCurrentUser();
+        setUser(currentUser);
       } catch (error) {
-        console.error("Failed to parse user from localStorage:", error);
+        console.error("Error initializing auth:", error);
+      } finally {
+        setIsLoading(false);
       }
-    }
-    setIsLoading(false);
+    };
+
+    initializeAuth();
+
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user || null);
+        setIsLoading(false);
+      }
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
-  // Mock login function - in a real app, this would call an API
   const login = async (email: string, password: string) => {
     setIsLoading(true);
-    
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // For demo purposes - in real app we'd validate with backend
-    if (password.length < 6) {
+    try {
+      const { user } = await signIn(email, password);
+      setUser(user);
+    } finally {
       setIsLoading(false);
-      throw new Error("Invalid credentials");
     }
-    
-    // Create mock user
-    const newUser = {
-      id: crypto.randomUUID(),
-      email,
-      name: email.split('@')[0],
-    };
-    
-    setUser(newUser);
-    localStorage.setItem("user", JSON.stringify(newUser));
-    setIsLoading(false);
   };
 
-  // Mock signup function - in a real app, this would call an API
   const signup = async (email: string, password: string, name?: string) => {
     setIsLoading(true);
-    
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // For demo purposes - in real app we'd validate with backend
-    if (password.length < 6) {
+    try {
+      const { user } = await signUp(email, password, name);
+      setUser(user);
+    } finally {
       setIsLoading(false);
-      throw new Error("Password must be at least 6 characters");
     }
-    
-    // Create mock user
-    const newUser = {
-      id: crypto.randomUUID(),
-      email,
-      name: name || email.split('@')[0],
-    };
-    
-    setUser(newUser);
-    localStorage.setItem("user", JSON.stringify(newUser));
-    setIsLoading(false);
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("user");
+  const logout = async () => {
+    try {
+      await signOut();
+      setUser(null);
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
 
   return (
