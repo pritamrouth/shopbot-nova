@@ -1,4 +1,5 @@
-
+import React from 'react';
+import AuthForm from './components/AuthForm';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,6 +16,7 @@ import SignUp from "./pages/SignUp";
 import Account from "./pages/Account";
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
+
 
 const queryClient = new QueryClient();
 

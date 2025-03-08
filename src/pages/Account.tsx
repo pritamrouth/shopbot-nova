@@ -17,13 +17,21 @@ const Account = () => {
     }
   }, [isAuthenticated, navigate]);
 
-  const handleLogout = () => {
-    logout();
-    toast({
-      title: "Logged out",
-      description: "You have been successfully logged out.",
-    });
-    navigate("/");
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out.",
+      });
+      navigate("/");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to log out. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   if (!user) {
@@ -42,7 +50,7 @@ const Account = () => {
               <div className="space-y-4">
                 <div>
                   <p className="text-sm text-gray-500">Name</p>
-                  <p className="font-medium">{user.name || "Not provided"}</p>
+                  <p className="font-medium">{user.user_metadata?.name || "Not provided"}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Email</p>
