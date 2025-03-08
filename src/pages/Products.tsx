@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { getFilteredProducts } from "@/data/products";
 import { Product } from "@/components/common/ProductCard";
 import ProductCard from "@/components/common/ProductCard";
-import { Filter, ChevronDown, Sliders } from "lucide-react";
+import { Filter, ChevronDown, Sliders, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import Newsletter from "@/components/common/Newsletter";
