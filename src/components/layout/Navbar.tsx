@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { Search, ShoppingCart, User, LogIn, Shield } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import MobileMenu from "./MobileMenu";
@@ -9,7 +8,6 @@ import MobileMenu from "./MobileMenu";
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchActive, setIsSearchActive] = useState(false);
-  const location = useLocation();
   const { isAuthenticated, isAdmin } = useAuth();
   const { getCartCount } = useCart();
 
