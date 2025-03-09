@@ -67,5 +67,10 @@ export const getCurrentUser = async () => {
 
 // Check if the current user is an admin
 export const isUserAdmin = (user: any) => {
+  // Check if this is our default admin email
+  if (user?.email === "pritamrouth2003@gmail.com") {
+    return true;
+  }
+  // Also check the metadata (for compatibility with existing logic)
   return user?.user_metadata?.isAdmin === true;
 };

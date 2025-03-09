@@ -1,7 +1,8 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
-import { Building2, Eye, EyeOff, Mail, Lock, ShieldCheck } from "lucide-react";
+import { Building2, Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/AuthContext";
 
@@ -13,9 +14,8 @@ const SignIn = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isAdminLogin, setIsAdminLogin] = useState(false);
   const navigate = useNavigate();
-  const { login: _login } = useAuth();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,8 +39,8 @@ const SignIn = () => {
         description: "You have successfully signed in.",
       });
       
-      // Check if we should redirect to admin dashboard
-      if (isAdminLogin) {
+      // Auto-redirect to admin if the email matches the admin email
+      if (formData.email === "pritamrouth2003@gmail.com") {
         navigate("/admin");
       } else {
         navigate("/");
@@ -63,19 +63,13 @@ const SignIn = () => {
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
-              {isAdminLogin ? (
-                <ShieldCheck className="h-12 w-12 text-indigo-600" />
-              ) : (
-                <Building2 className="h-12 w-12 text-gray-900" />
-              )}
+              <Building2 className="h-12 w-12 text-gray-900" />
             </div>
             <h2 className="text-3xl font-bold text-gray-900">
-              {isAdminLogin ? "Admin Login" : "Welcome Back"}
+              Welcome Back
             </h2>
             <p className="text-gray-600 mt-2">
-              {isAdminLogin 
-                ? "Sign in to access your admin dashboard" 
-                : "Sign in to access your account"}
+              Sign in to access your account
             </p>
           </div>
 
@@ -123,20 +117,6 @@ const SignIn = () => {
               </div>
             </div>
 
-            <div className="flex items-center">
-              <input
-                id="admin-login"
-                name="admin-login"
-                type="checkbox"
-                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                checked={isAdminLogin}
-                onChange={() => setIsAdminLogin(!isAdminLogin)}
-              />
-              <label htmlFor="admin-login" className="ml-2 block text-sm text-gray-900">
-                Sign in as administrator
-              </label>
-            </div>
-
             {error && (
               <div className="text-red-600 text-sm bg-red-50 p-3 rounded-md">
                 {error}
@@ -146,11 +126,9 @@ const SignIn = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
-                isAdminLogin ? 'bg-indigo-700 hover:bg-indigo-800' : 'bg-indigo-600 hover:bg-indigo-700'
-              } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50`}
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
             >
-              {isSubmitting ? 'Signing in...' : isAdminLogin ? 'Sign In as Admin' : 'Sign In'}
+              {isSubmitting ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
 
