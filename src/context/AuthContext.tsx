@@ -1,14 +1,15 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { User } from "@supabase/supabase-js";
-import { signIn, signUp, signOut, getCurrentUser, supabase } from "@/lib/supabase";
+import { signIn, signUp, signOut, getCurrentUser, supabase, isUserAdmin } from "@/lib/supabase";
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
+  isAdmin: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string, name?: string) => Promise<void>;
+  signup: (email: string, password: string, name?: string, isAdmin?: boolean) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -17,6 +18,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // Initialize auth state
   useEffect(() => {
@@ -24,6 +26,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         const currentUser = await getCurrentUser();
         setUser(currentUser);
+        setIsAdmin(isUserAdmin(currentUser));
       } catch (error) {
         console.error("Error initializing auth:", error);
       } finally {
@@ -36,7 +39,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        setUser(session?.user || null);
+        const updatedUser = session?.user || null;
+        setUser(updatedUser);
+        setIsAdmin(isUserAdmin(updatedUser));
         setIsLoading(false);
       }
     );
@@ -51,16 +56,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const { user } = await signIn(email, password);
       setUser(user);
+      setIsAdmin(isUserAdmin(user));
     } finally {
       setIsLoading(false);
     }
   };
 
-  const signup = async (email: string, password: string, name?: string) => {
+  const signup = async (email: string, password: string, name?: string, isAdmin = false) => {
     setIsLoading(true);
     try {
-      const { user } = await signUp(email, password, name);
+      const { user } = await signUp(email, password, name, isAdmin);
       setUser(user);
+      setIsAdmin(isUserAdmin(user));
     } finally {
       setIsLoading(false);
     }
@@ -70,6 +77,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       await signOut();
       setUser(null);
+      setIsAdmin(false);
     } catch (error) {
       console.error("Error during logout:", error);
     }
@@ -80,6 +88,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       value={{
         user,
         isAuthenticated: !!user,
+        isAdmin,
         isLoading,
         login,
         signup,

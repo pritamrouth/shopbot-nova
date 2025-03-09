@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { Search, ShoppingCart, User, LogIn } from "lucide-react";
+import { Search, ShoppingCart, User, LogIn, Shield } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -12,7 +12,7 @@ const Navbar = () => {
   const [isSearchActive, setIsSearchActive] = useState(false);
   const location = useLocation();
   const isHome = location.pathname === "/";
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAdmin } = useAuth();
   const { getCartCount } = useCart();
 
   useEffect(() => {
@@ -58,6 +58,14 @@ const Navbar = () => {
                   Brands
                 </Link>
               </li>
+              {isAdmin && (
+                <li>
+                  <Link to="/admin" className="text-sm font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
+                    <Shield size={16} />
+                    Admin
+                  </Link>
+                </li>
+              )}
             </ul>
           </nav>
         </div>
