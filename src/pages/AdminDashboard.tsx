@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -6,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
-import { Plus, Save, Image as ImageIcon, Trash } from "lucide-react";
+import { Plus, Save } from "lucide-react";
 
 interface ProductFormData {
   name: string;
@@ -32,7 +31,6 @@ const AdminDashboard = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    // Redirect if not an admin
     if (!isAdmin && !isAuthenticated) {
       navigate("/signin");
     } else if (!isAdmin) {
@@ -60,13 +58,11 @@ const AdminDashboard = () => {
     setIsSubmitting(true);
 
     try {
-      // Validate required fields
       if (!formData.name || !formData.price || !formData.category || !formData.image) {
         throw new Error("Please fill all required fields");
       }
 
-      // Add product to Supabase
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("products")
         .insert([{
           name: formData.name,
@@ -88,7 +84,6 @@ const AdminDashboard = () => {
         description: "The product has been successfully added to the store.",
       });
 
-      // Reset form
       setFormData(initialFormData);
     } catch (error: any) {
       toast({

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
@@ -16,7 +15,7 @@ const SignIn = () => {
   const [error, setError] = useState<string | null>(null);
   const [isAdminLogin, setIsAdminLogin] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login: _login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

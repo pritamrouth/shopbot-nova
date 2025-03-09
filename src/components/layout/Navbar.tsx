@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Search, ShoppingCart, User, LogIn, Shield } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -11,7 +10,6 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchActive, setIsSearchActive] = useState(false);
   const location = useLocation();
-  const isHome = location.pathname === "/";
   const { isAuthenticated, isAdmin } = useAuth();
   const { getCartCount } = useCart();
 

@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getProductById, getRelatedProducts } from "@/data/products";
-import { Minus, Plus, Star, Truck, RotateCw, Shield, Heart, ChevronRight, ChevronLeft, MoreHorizontal } from "lucide-react";
+import { Minus, Plus, Star, Truck, RotateCw, Shield, Heart, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProductCard from "@/components/common/ProductCard";

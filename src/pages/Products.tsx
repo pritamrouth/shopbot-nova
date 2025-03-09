@@ -1,4 +1,3 @@
-
 import { useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getFilteredProducts } from "@/data/products";
@@ -11,7 +10,7 @@ import Newsletter from "@/components/common/Newsletter";
 
 const ProductsPage = () => {
   const { category } = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [priceRange, setPriceRange] = useState([0, 300]);
   const [showFilters, setShowFilters] = useState(false);

@@ -1,5 +1,4 @@
-
-import { Menu, X, ChevronRight, Search, User, ShoppingCart, LogIn, LogOut } from "lucide-react";
+import { Menu, X, ChevronRight, Search, User, LogIn, LogOut } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
