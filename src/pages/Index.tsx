@@ -92,7 +92,7 @@ const Index = () => {
             
             <div className="relative">
               <img
-                src="lovable-uploads/download.jpg"
+                src="assets/download.jpg"
                 alt="Fashion models"
                 className="w-full rounded-lg"
               />
